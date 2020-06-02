@@ -1,0 +1,3 @@
+let PyNotImplemented = {};
+
+export { PyNotImplemented };
