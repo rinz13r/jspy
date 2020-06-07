@@ -25,10 +25,18 @@
 		font-family: 'Courier New', Courier, monospace;
 	}
 	</style>
-	<div id="editor">class A:
+	<div id="editor">class Point:
 	def __init__ (self, x, y):
-		return 12
-	</div>
+		self.x = x
+		self.y = y
+	def __str__ (self):
+		return (self.x, self.y)
+	def __add__ (self, other):
+		return Point (self.x+other.x, self.y+other.y)
+
+p1 = Point (1, 2)
+p2 = Point (3, 4)
+print (p1+p2)</div>
 	<div id="console"></div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.js" type="text/javascript" charset="utf-8"></script>
 	<script>

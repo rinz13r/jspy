@@ -23,7 +23,7 @@ function $GetAttrString (o, selector) {
 			}
 		}
 		if (o.hasOwnProperty ('dict') && selector in o.dict) {
-			console.log (o, o.dict);
+			// console.log (o, o.dict);
 			console.log ('here2');
 			return o.dict[selector];
 		}
@@ -45,7 +45,7 @@ function $GetAttrString (o, selector) {
 
 function $SetAttrString (o, selector, val) {
 	// TODO: Update algorithm to handle edge cases
-	o.dict.selector = val;
+	o.dict[selector] = val;
 }
 
 function $bin_add (left, right) {
@@ -70,4 +70,5 @@ function $bin_op (op, left, right) {
 		return $bin_add (left, right);
 	}
 }
-export {$operator_bin_add, $repr, $GetAttrString, $bin_op};
+
+export { $operator_bin_add, $repr, $GetAttrString, $bin_op, $SetAttrString };

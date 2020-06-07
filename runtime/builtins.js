@@ -11,7 +11,7 @@ let pyprint = PyFunction_From ('print', function (u) {
 	while (str.type != PyStr_Type) {
 		str = str.type.__str__ (str);
 	}
-	console.log (str.val);
+	console.pylog (str.val);
 });
 
 export { print, pyprint };

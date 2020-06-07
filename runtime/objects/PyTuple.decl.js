@@ -1,4 +1,4 @@
-import { PyType } from "./PyObject.decl.js";
+import { PyType, PyObject_Type } from "./PyObject.decl.js";
 
 function PyTuple (...args) {
 	this.type = PyTuple_Type;
@@ -6,6 +6,8 @@ function PyTuple (...args) {
 	this.arr = args;
 }
 
-let PyTuple_Type = new PyType ('tuple');
+let PyTuple_Type = Object.create (PyObject_Type);
+PyType.call (PyTuple_Type, 'tuple');
+// let PyTuple_Type = new PyType ('tuple');
 
 export { PyTuple_Type, PyTuple };

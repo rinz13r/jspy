@@ -14,7 +14,7 @@ class Visitor {
 	}
 	reset () {
 		this.program = `let scope = {
-			print : lib.py.builtins.print
+			print : lib.py.builtins.pyprint
 		};\n`;
 	}
 	visitBinop (node) {
@@ -140,7 +140,21 @@ class Visitor {
 	visit (ast) {
 		let program = "";
 		console.log (ast.type);
+		console.log (ast);
 		this[`visit${ast.type[0].toUpperCase () + ast.type.substr (1)}`] (ast);
+	}
+	listOfItems (items) {
+		this.program += '[';
+		for (let item of items) {
+			this.visit (item);
+			this.program += ',';
+		}
+		this.program += ']';
+	}
+	visitTuple (ast) {
+		this.program += `new ${this.namespace}.PyTuple (...`;
+		this.listOfItems (ast.items);
+		this.program += ')\n';
 	}
 	visitClass (node) {
 		console.log (node);

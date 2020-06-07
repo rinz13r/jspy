@@ -27,9 +27,6 @@ $repr (PyTrue)
 let Point = Object.create (PyObject_Type);
 PyType.call (Point, 'point');
 
-Point.__init__ = function proxy_call (self, args, kwargs) {
-	$CallWithArgs (Point.init, args, kwargs);
-}
 Point.__init__ = PyFunction_From ('__init__', function (self, x, y) {
 	self.dict.x = x;
 	self.dict.y = y;
@@ -46,4 +43,4 @@ let p = $call (Point, new PyTuple (a, b));
 // $repr (p);
 // $call (pyprint, new PyTuple (p));
 // console.log (Point.dict);
-$repr ($GetAttrString (Point, '__str__'));
+$repr ($GetAttrString (p, '__str__'));
