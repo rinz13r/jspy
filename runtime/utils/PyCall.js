@@ -1,8 +1,8 @@
 import { PyTuple } from "../objects/PyTuple.decl.js";
 
 function $CallWithArgs (callable, args, kwargs) {
-	if (callable.__call__ != undefined) {
-		return callable.__call__ (callable, args);
+	if (callable.type.__call__ != undefined) {
+		return callable.type.__call__ (callable, args);
 	}
 	console.error (`PyTypeError: '${callable.type.name}' object is not callable`);
 }

@@ -34,11 +34,19 @@ class Visitor {
 		if (node.targets.length != 1) {
 			console.error ('multi-targets not supoorted by parser');
 		}
-		this.visit (node.targets[0]);
-		this.program += '=';
 		if (node.sources.length != 1) {
 			console.error ('tuples unpacking not supported');
 		}
+		console.log (node);
+		if (node.targets[0].type == "dot") {
+			this.setAttr = true;
+			this.visit (node.targets[0]);
+			this.visit (node.sources[0]);
+			this.program += ');\n';
+			return;
+		}
+		this.visit (node.targets[0]);
+		this.program += '=';
 		this.visit (node.sources[0]);
 		this.program += ';\n';
 	}
@@ -66,14 +74,15 @@ class Visitor {
 	}
 	visitDef (node) {
 		console.log (node);
-		this.program += `function ${node.name} (`;
+		this.program += `${this.currentScope}.${node.name} = ${this.namespace}.PyFunction_From ('${node.name}', `
+		this.program += `function (`;
 		for (let param of node.params) {
 			this.program += param.name;
 			this.program += ', ';
 		}
 		let scope = this.currentScope;
 		this.currentScope = `${this.parentScope}_`;
-		this.program += `) {${this.currentScope} = Object.create (${this.parentScope});`;
+		this.program += `) {let ${this.currentScope} = Object.create (${this.parentScope});`;
 		for (let param of node.params) {
 			this.program += `${this.currentScope}.${param.name} = ${param.name};`;
 		}
@@ -83,9 +92,9 @@ class Visitor {
 			this.visit (stmt);
 		}
 		this.parentScope = prev;
-		this.program += '}'
+		this.program += '});'
 		this.currentScope = scope;
-		this.program += `${this.currentScope}.${node.name} = new ${this.namespace}.PyFunction ("${node.name}", ${node.name});`;
+		// this.program += `${this.currentScope}.${node.name} = new ${this.namespace}.PyFunction ("${node.name}", ${node.name});`;
 	}
 	visitDefToNativeLambda (node) {
 		this.program += `function (`
@@ -111,6 +120,13 @@ class Visitor {
 		this.program += ';';
 	}
 	visitDot (node) {
+		if (this.setAttr) {
+			this.program += `${this.namespace}.$SetAttrString (`;
+			this.visit (node.value);
+			this.program += `, "${node.name}", `;
+			this.setAttr = false;
+			return;
+		}
 		this.program += `${this.namespace}.$GetAttrString (`;
 		this.visit (node.value);
 		this.program += `, "${node.name}")`;

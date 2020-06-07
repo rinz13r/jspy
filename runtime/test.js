@@ -1,7 +1,8 @@
 import { $GetAttrString, $repr, $bin_op } from "./utils/abstract.js"
-import { PyInt, PyStr, PyTuple, PyFunction, PyFunction_From, PyType, PyTrue, PyFalse } from "./objects/exit.js"
+import { PyInt, PyStr, PyTuple, PyFunction, PyFunction_From, PyType, PyTrue, PyFalse, f } from "./objects/exit.js"
 import { $CallWithArgs } from "./utils/PyCall.js";
 import { PyType_Type, PyObject_Type, PyObject } from "./objects/PyObject.decl.js";
+import { pyprint } from "./builtins.js";
 
 console.pylog = console.log;
 
@@ -33,12 +34,16 @@ Point.__init__ = PyFunction_From ('__init__', function (self, x, y) {
 	self.dict.x = x;
 	self.dict.y = y;
 });
-// Point.__init__.type.__call__ (PyInt.__init__, )
-// Point.init = new PyFunction ('init', function (self, x, y) {
-// 	self.dict.x = x;
-// 	self.dict.y = y;
-// });
+
 Point.__repr__ = function (self) {
-	return `point`;
+	return `${self.dict.x.val}, ${self.dict.y.val}`;
 }
-console.log ($call (Point, new PyTuple (Point, a, b)));
+Point.__str__ = PyFunction_From ('__str__', function (self) {
+	return new PyTuple (self.dict.x, self.dict.y);
+});
+f (Point);
+let p = $call (Point, new PyTuple (a, b));
+// $repr (p);
+// $call (pyprint, new PyTuple (p));
+// console.log (Point.dict);
+$repr ($GetAttrString (Point, '__str__'));

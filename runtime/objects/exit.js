@@ -4,6 +4,7 @@ import { PyType, PyType_Type, PyObject_Type } from "./PyObject.decl.js";
 import { PyInt, PyInt_Type } from "./PyInt.decl.js";
 import { PyStr, PyStr_Type } from "./PyStr.decl.js";
 import { PyFunction_From, PyFunction, PyFunction_Type } from "./PyFunction.decl.js";
+import { PyMethod_From, PyMethod_Type } from "./PyMethod.decl.js";
 import { PyTuple, PyTuple_Type } from "./PyTuple.decl.js";
 import { PyTrue, PyFalse, PyBool_Type } from "./PyBool.decl.js";
 
@@ -14,6 +15,7 @@ import {  } from "./PyFunction.impl.js";
 import {  } from "./PyTuple.impl.js";
 import {  } from "./PyBool.impl.js";
 import {  } from "./PyType.impl.js";
+import {  } from "./PyMethod.impl.js";
 
 const dunders = new Set ([
 	'__repr__',
@@ -26,13 +28,15 @@ const dunders = new Set ([
 function f (type_obj) {
 	for (let dunder in type_obj) {
 		if (dunders.has (dunder)) {
-			type_obj.dict[dunder] = new PyFunction (dunder, type_obj[dunder]);
+			type_obj[dunder] = PyFunction_From (dunder, type_obj[dunder]);
+			// type_obj.dict[dunder] = new PyFunction (dunder, type_obj[dunder]);
+			type_obj.dict[dunder] = type_obj[dunder];
 		}
 	}
 }
 
-let types = [PyInt_Type, PyStr_Type, PyType_Type, PyTuple_Type, PyFunction_Type, PyBool_Type];
+let types = [PyInt_Type, PyStr_Type, PyType_Type, PyTuple_Type, PyFunction_Type, PyBool_Type, PyMethod_Type];
 
 for (let type of types) f (type);
 
-export { PyInt, PyStr, PyTuple, PyFunction, PyType, PyFunction_From, PyTrue, PyFalse, PyObject_Type };
+export { PyInt, PyStr, PyTuple, PyFunction, PyType, PyFunction_From, PyTrue, PyFalse, PyObject_Type, f };

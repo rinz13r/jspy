@@ -11,7 +11,7 @@ function $repr (u) {
 
 function $GetAttrString (o, selector) {
 	let typ = o.type;
-	if ('__getattribute__' in typ) {
+	if (0) {
 		return typ.__getattribute__ (o, new PyStr (selector));
 	} else {
 		let res;
@@ -30,7 +30,7 @@ function $GetAttrString (o, selector) {
 		if (res) {
 			if ('__get__' in res.type) {
 				console.log ('here3');
-				return res.__get__ (res, o, typ);
+				return res.type.__get__ (res, o, typ);
 			}
 			console.log ('here4');
 			return res;
@@ -41,6 +41,11 @@ function $GetAttrString (o, selector) {
 	// Try o.__getattr__
 	// Throw PyAttributeError
 
+}
+
+function $SetAttrString (o, selector, val) {
+	// TODO: Update algorithm to handle edge cases
+	o.dict.selector = val;
 }
 
 function $bin_add (left, right) {

@@ -1,5 +1,6 @@
 import { PyTuple_Type, PyTuple } from "./PyTuple.decl.js";
 import { PyNotImplemented } from "./PyNotImplemented.decl.js";
+import { PyStr } from "./PyStr.decl.js";
 
 function PyTupleCheck (u) {
 	if (u.type == PyTuple_Type) return true;
@@ -14,10 +15,10 @@ PyTuple_Type.__add__ = function (self, other) {
 
 PyTuple_Type.__str__ = function (self) {
 	if (!PyTupleCheck (self)) return PyNotImplemented;
-	let js_str = ``;
+	let js_str = `(`;
 	for (let el of self.arr) {
-		let el_pystr = el.__str__ ();
-		js_str += el_pystr.val;
+		let el_pystr = el.type.__str__ (el);
+		js_str += `${el_pystr.val}, `;
 	}
-	return PyStr (js_str);
+	return new PyStr (js_str+')');
 }
