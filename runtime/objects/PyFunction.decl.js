@@ -13,4 +13,11 @@ function PyFunction (name, jsfunc) {
 let PyFunction_Type = new PyType ('function');
 PyFunction.prototype = PyFunction_Type;
 
-export { PyFunction, PyFunction_Type };
+Function.prototype.type = PyFunction_Type;
+function PyFunction_From (name, jsfunc) {
+	jsfunc.__name__ = name;
+	jsfunc.dict = {};
+	return jsfunc;
+}
+
+export { PyFunction, PyFunction_Type, PyFunction_From };

@@ -6,7 +6,6 @@ function PyTuple (...args) {
 	this.arr = args;
 }
 
-let PyTuple_Type = new PyType ('tuple', {
-});
+let PyTuple_Type = new PyType ('tuple');
 
 export { PyTuple_Type, PyTuple };

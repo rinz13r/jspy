@@ -7,11 +7,12 @@ function PyTupleCheck (u) {
 	return false;
 }
 
-function __add__ (self, other) {
+PyTuple_Type.__add__ = function (self, other) {
 	if (!PyTupleCheck (self) || !PyTupleCheck (other)) return PyNotImplemented;
 	return new PyTuple (self.arr.concat (other.arr));
 }
-function __str__ (self) {
+
+PyTuple_Type.__str__ = function (self) {
 	if (!PyTupleCheck (self)) return PyNotImplemented;
 	let js_str = ``;
 	for (let el of self.arr) {

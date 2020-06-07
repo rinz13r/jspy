@@ -5,11 +5,7 @@ function PyStr (val) {
 	this.type = PyStr_Type;
 }
 
-let PyStr_Type = new PyType ('str', {
-	'__str__' : function (u) {return u;},
-	'__add__' : function (u, v) {return new PyStr (u.val + v.val);},
-	'__repr__' : function (self) {return self.val;},
-});
+let PyStr_Type = new PyType ('str');
 
 PyStr.prototype = PyStr_Type;
 

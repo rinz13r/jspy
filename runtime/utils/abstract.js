@@ -1,15 +1,18 @@
+import { PyNotImplemented } from "../objects/PyNotImplemented.decl.js";
+import { PyStr } from "../objects/PyStr.decl.js";
+
 function $operator_bin_add (u, v) {
 	return u.__add__ (u, v);
 }
 
 function $repr (u) {
-	console.log (u.__repr__ (u));
+	console.pylog (u.type.__repr__ (u));
 }
 
 function $GetAttrString (o, selector) {
 	let typ = o.type;
 	if ('__getattribute__' in typ) {
-		return typ.__getattribute__ (o);
+		return typ.__getattribute__ (o, new PyStr (selector));
 	} else {
 		let res;
 		if (selector in typ.dict) {
@@ -40,4 +43,26 @@ function $GetAttrString (o, selector) {
 
 }
 
-export {$operator_bin_add, $repr, $GetAttrString};
+function $bin_add (left, right) {
+	if ('__add__' in left.type) {
+		let res = left.type.__add__ (left, right);
+		if (res != PyNotImplemented) {
+			return res;
+		}
+	}
+	if ('__add__' in right.type) {
+		let res = right.type.__add__ (right, left);
+		if (res != PyNotImplemented) {
+			return  res;
+		}
+	}
+	// Ideally throw the error and stop execution unless caught.
+	console.pylog (`PyTypeError: Unsupported operands for '+': '${left.type.name}' and '${right.type.name}'`);
+}
+
+function $bin_op (op, left, right) {
+	if (op == "+") {
+		return $bin_add (left, right);
+	}
+}
+export {$operator_bin_add, $repr, $GetAttrString, $bin_op};

@@ -1,4 +1,4 @@
-import {$operator_bin_add, $repr, $GetAttrString} from "./abstract.js"
+import {$bin_op, $repr, $GetAttrString} from "./abstract.js"
 import { $CallWithArgs, $CallWithNoArgs } from "./PyCall.js"
 
-export { $operator_bin_add, $repr, $GetAttrString, $CallWithArgs, $CallWithNoArgs };
+export { $repr, $GetAttrString, $CallWithArgs, $CallWithNoArgs, $bin_op };

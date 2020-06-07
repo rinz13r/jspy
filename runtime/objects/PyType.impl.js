@@ -1,15 +1,15 @@
-import { PyMeta_Type, PyType } from "./PyObject.decl.js";
+import { PyType_Type, PyType } from "./PyObject.decl.js";
 
-function __init__ () {
-
+PyType_Type.__call__ = function (cls, args, kwargs) {
+	// TODO: Support __new__
+	// Simulate __new__ for now
+	let ret = {
+		type : cls,
+		dict : {},
+	};
+	cls.__init__ (ret, args, kwargs);
+	return ret;
 }
-function __getattribute__ (self) {
-	if (self == PyMeta_Type) {
-
-	}
-}
-
-function __call__ (self, args) { // Return new Instance of class
-	let ret = {};
-	self.__init__ (ret, args);
+PyType_Type.__str__ = function (self) {
+	return new PyStr (`type`);
 }

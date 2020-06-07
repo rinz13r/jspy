@@ -3,7 +3,7 @@ import { PyStr } from "./PyStr.decl.js";
 import { PyNotImplemented } from "./PyNotImplemented.decl.js";
 
 function PyInt_Check (o) {
-	return o.type === PyInt_Type;
+	return o.type === PyInt_Type || PyInt_Type.isPrototypeOf (o.type);
 }
 
 PyInt_Type.__str__ = function (self) {
