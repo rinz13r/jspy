@@ -14,7 +14,9 @@ class Visitor {
 	}
 	reset () {
 		this.program = `let scope = {
-			print : lib.py.builtins.pyprint
+			print : lib.py.builtins.pyprint,
+			int : lib.py.PyInt_Type,
+			str : lib.py.PyStr_Type,
 		};\n`;
 	}
 	visitBinop (node) {
@@ -51,10 +53,21 @@ class Visitor {
 		this.program += ';\n';
 	}
 	visitLiteral (node) {
+		console.log (node);
 		if (typeof (node.value) == "number")
 			this.program += `(new ${this.namespace}.PyInt (${node.value}))`;
 		else if (typeof (node.value) == "string") {
-			this.program += `(new ${this.namespace}.PyStr (${node.value}))`;
+			if (node.value[0] == "\\" || node.value[0] == '\'') {
+				this.program += `(new ${this.namespace}.PyStr (${node.value}))`;
+			} else if (node.value == "None") {
+				this.program += `(${this.namespace}.PyNone)`;
+			} else if (node.value == "True") {
+				this.program += `(${this.namespace}.PyTrue)`;
+			} else if (node.value == "False") {
+				this.program += `(${this.namespace}.PyFalse)`;
+			} else {
+				console.error (`unknown literal type`);
+			}
 		}
 		else {
 			console.error ('unknown literal type');
@@ -156,6 +169,11 @@ class Visitor {
 		this.listOfItems (ast.items);
 		this.program += ')\n';
 	}
+	visitList (ast) {
+		this.program += `${this.namespace}.PyList_From (`
+		this.listOfItems (ast.items);
+		this.program += ')\n';
+	}
 	visitClass (node) {
 		console.log (node);
 		// TODO: Consider Base Class
@@ -169,8 +187,8 @@ class Visitor {
 			// if (code.type == "def") this.visitDefToNativeLambda (code);
 			this.visit (code);
 		}
-		// this.program += `$initialize_class_dict (${this.currentScope}.${node.name});\n`
 		this.currentScope = scope;
+		this.program += `${this.namespace}.$initialize_type (${this.currentScope}.${node.name});\n`
 	}
 }
 

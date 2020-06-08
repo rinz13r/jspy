@@ -1,4 +1,5 @@
 import { PyMethod_Type } from "./PyMethod.decl.js";
+import { PyStr } from "./PyStr.decl.js";
 
 function __call__ (self, args, kwargs) {
 	// console.log (self.length, args.len);
@@ -10,14 +11,14 @@ function __call__ (self, args, kwargs) {
 }
 
 function __str__ (self) {
-	return new PyStr (self.__name__);
+	return new PyStr (`<bound-method '${self.__name__}'>`);
 }
 
 PyMethod_Type.__call__ = __call__;
 PyMethod_Type.__get__ = function (self, u) {
 	// console.log ('__get__', self);
 	// console.log (self.jsfunc.toString ());
-	return PyMethod_From (self.__name__, self.bind (null, u), true);
+	return PyMethod_From (self.__name__, self.bind (null, u));
 	return new PyFunction (self.name, self.jsfunc.bind (null, u));
 };
 PyMethod_Type.__repr__ = function (u) {

@@ -9,7 +9,7 @@ function TYPE (o) {return o.type;}
 
 PyObject_Type. __repr__ = function (self) {return `<object at ?mem>`;}
 PyObject_Type.__str__ = function (self) {
-	return new PyStr (`<object at ?mem>`);
+	return new PyStr (`<object '${self.type.name}' at ?mem>`);
 }
 
 PyObject_Type.__eq__ = function (u, v) {
@@ -33,16 +33,16 @@ PyObject_Type.__getattribute__ = function (self, selector) {
 	selector = selector.val;
 	if (self.type.dict.hasOwnProperty (selector)) { // TODO: Guarantee all types have dict
 		res = self.type.dict[selector];
-		if ('__get__' in res && '__set__' in res) { // Data Descriptor
-			return res.__get__ (res, self, PyObject_Type); // TODO: Maybe passing wrong args
+		if ('__get__' in res.type && '__set__' in res.type) { // Data Descriptor
+			return res.type.__get__ (res, self, self.type); // TODO: Maybe passing wrong args
 		}
 	}
 	if (self.dict && selector in self.dict) {
 		return self.dict[selector];
 	}
 	if (res) {
-		if ('__get__' in res) {
-			return res.__get__ (res, self, PyObject_Type); // TODO
+		if ('__get__' in res.type) {
+			return res.type.__get__ (res, self, self.type); // TODO
 		}
 		return res;
 	}

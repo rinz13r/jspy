@@ -12,7 +12,7 @@ function __call__ (self, args, kwargs) {
 }
 
 function __str__ (self) {
-	return new PyStr (self.dict.__name__);
+	return new PyStr (`<function '${self.__name__}'>`);
 }
 
 PyFunction_Type.__call__ = __call__;
@@ -20,7 +20,6 @@ PyFunction_Type.__get__ = function (self, u) {
 	// console.log ('__get__', self);
 	// console.log (self.jsfunc.toString ());
 	return PyMethod_From (self.__name__, self.bind (null, u));
-	return new PyFunction (self.name, self.jsfunc.bind (null, u));
 };
 PyFunction_Type.__repr__ = function (u) {
 	return `<function '${u.__name__}'>`;

@@ -36,14 +36,19 @@ const arity_for_name = {
 	'__get__' : 3,
 };
 
-function $intialize_usr_dict (type) {
-	for (let dunder of dunders) {
-		if (type.hasOwnProperty (dunder)) {
-			if (arity_for_name[dunder] == 1) {
-				
-			}
-		}
+function $initialize_type (type) {
+	for (let k in type) {
+		if (k == 'dict' || k == 'type') continue;
+		let v = type[k];
+		type.dict[k] = v;
 	}
+	// for (let dunder of dunders) {
+	// 	if (type.hasOwnProperty (dunder)) {
+	// 		if (arity_for_name[dunder] == 1) {
+				
+	// 		}
+	// 	}
+	// }
 }
 
 function tp_call (self, ...args) {
@@ -51,4 +56,4 @@ function tp_call (self, ...args) {
 	return $CallWithArgs (self.dict.__init__, new PyTuple (args));
 }
 
-export { $get_binary_slot_wrapper };
+export { $get_binary_slot_wrapper, $initialize_type };

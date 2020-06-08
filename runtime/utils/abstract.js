@@ -11,7 +11,7 @@ function $repr (u) {
 
 function $GetAttrString (o, selector) {
 	let typ = o.type;
-	if (0) {
+	if (typ.__getattribute__) {
 		return typ.__getattribute__ (o, new PyStr (selector));
 	} else {
 		let res;
@@ -24,7 +24,7 @@ function $GetAttrString (o, selector) {
 		}
 		if (o.hasOwnProperty ('dict') && selector in o.dict) {
 			// console.log (o, o.dict);
-			console.log ('here2');
+			console.log ('here2', o.dict[selector]);
 			return o.dict[selector];
 		}
 		if (res) {

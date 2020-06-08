@@ -1,5 +1,6 @@
 import { PyType_Type, PyType } from "./PyObject.decl.js";
 import { PyTuple } from "./PyTuple.decl.js"
+import { PyStr } from "./PyStr.decl.js";
 
 PyType_Type.__call__ = function (cls, args, kwargs) {
 	// TODO: Support __new__
@@ -15,7 +16,7 @@ PyType_Type.__call__ = function (cls, args, kwargs) {
 	return ret;
 }
 PyType_Type.__str__ = function (self) {
-	return new PyStr (`type`);
+	return new PyStr (`<class '${self.name}'>`);
 }
 PyType_Type.__repr__ = function (self) {
 	return self.name;

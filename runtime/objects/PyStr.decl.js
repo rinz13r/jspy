@@ -1,12 +1,18 @@
-import { PyType } from "./PyObject.decl.js";
+import { PyType, PyObject_Type } from "./PyObject.decl.js";
 
 function PyStr (val) {
 	this.val = val;
 	this.type = PyStr_Type;
 }
+function PyStr_From (jsString) {
+	let ret = new String (jsString);
+	ret.dict = {};
+	ret.type = PyStr_Type;
+	return  ret;
+}
 
-let PyStr_Type = new PyType ('str');
+let PyStr_Type = Object.create (PyObject_Type);
+PyType.call (PyStr_Type, 'str');
 
-PyStr.prototype = PyStr_Type;
-
-export { PyStr, PyStr_Type };
+// TODO: Remove PyStr from codebase
+export { PyStr, PyStr_From, PyStr_Type };
