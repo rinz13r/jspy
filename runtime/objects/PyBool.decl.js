@@ -13,7 +13,12 @@ PyType.call (PyBool_Type, 'bool', PyInt_Type);
 PyTrue.type = PyBool_Type;
 PyFalse.type = PyBool_Type;
 
-Object.setPrototypeOf (PyTrue, PyBool_Type)
-// PyTrue.prototype = PyBool_Type;
+Object.setPrototypeOf (PyTrue, PyBool_Type);
+Object.setPrototypeOf (PyFalse, PyBool_Type);
 
-export { PyTrue, PyFalse, PyBool_Type };
+function $PyBool_From (jsBool) {
+	return jsBool ? PyTrue : PyFalse;
+}
+
+
+export { PyTrue, PyFalse, PyBool_Type, $PyBool_From };

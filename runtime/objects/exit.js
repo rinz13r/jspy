@@ -30,11 +30,11 @@ const dunders = new Set ([
 ]);
 
 function f (type_obj) {
-	for (let dunder in type_obj) {
-		if (dunders.has (dunder)) {
-			type_obj[dunder] = PyFunction_From (dunder, type_obj[dunder]);
-			// type_obj.dict[dunder] = new PyFunction (dunder, type_obj[dunder]);
-			type_obj.dict[dunder] = type_obj[dunder];
+	for (let k of Object.getOwnPropertyNames (type_obj)) {
+		let v = type_obj[k];
+		if (typeof v == "function") {
+			type_obj[k] = PyFunction_From (k, v);
+			type_obj.dict[k] = v;
 		}
 	}
 }

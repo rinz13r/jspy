@@ -20,7 +20,6 @@ class Visitor {
 		};\n`;
 	}
 	visitBinop (node) {
-		console.log (node);
 		this.program += `${this.namespace}.$bin_op ("${node.op}", `;
 		this.visit (node.left);
 		this.program += ',';
@@ -39,7 +38,6 @@ class Visitor {
 		if (node.sources.length != 1) {
 			console.error ('tuples unpacking not supported');
 		}
-		console.log (node);
 		if (node.targets[0].type == "dot") {
 			this.setAttr = true;
 			this.visit (node.targets[0]);
@@ -53,7 +51,6 @@ class Visitor {
 		this.program += ';\n';
 	}
 	visitLiteral (node) {
-		console.log (node);
 		if (typeof (node.value) == "number")
 			this.program += `(new ${this.namespace}.PyInt (${node.value}))`;
 		else if (typeof (node.value) == "string") {
@@ -86,7 +83,6 @@ class Visitor {
 		this.program += ')\n';
 	}
 	visitDef (node) {
-		console.log (node);
 		this.program += `${this.currentScope}.${node.name} = ${this.namespace}.PyFunction_From ('${node.name}', `
 		this.program += `function (`;
 		for (let param of node.params) {
@@ -152,9 +148,34 @@ class Visitor {
 	}
 	visit (ast) {
 		let program = "";
-		console.log (ast.type);
-		console.log (ast);
-		this[`visit${ast.type[0].toUpperCase () + ast.type.substr (1)}`] (ast);
+		try {
+			this[`visit${ast.type[0].toUpperCase () + ast.type.substr (1)}`] (ast);
+		} catch (e) {
+			console.error (`visit${ast.type[0].toUpperCase () + ast.type.substr (1)} is undefined`);
+			console.error (ast);
+		}
+	}
+	visitIf (node) {
+		this.program += `if (${this.namespace}.JS_truth_value (`
+		this.visit (node.cond.items[0]);
+		this.program += ')) {\n';
+		for (let stmt of node.code) {
+			this.visit (stmt);
+		}
+		this.program += '}';
+		if (node.elif) {
+			for (let elif_node of node.elif) {
+				this.program += 'else ';
+				this.visitIf (elif_node);
+			}
+		}
+		if (node.else) {
+			this.program += 'else {\n';
+			for (let stmt in node.else.code) {
+				this.visit (stmt);
+			}
+			this.program += '}\n';
+		}
 	}
 	listOfItems (items) {
 		this.program += '[';
@@ -175,7 +196,6 @@ class Visitor {
 		this.program += ')\n';
 	}
 	visitClass (node) {
-		console.log (node);
 		// TODO: Consider Base Class
 		this.program += `${this.currentScope}.${node.name} = Object.create (${this.namespace}.PyObject_Type);\n`;
 		this.program += `${this.namespace}.PyType.call (${this.currentScope}.${node.name}, '${node.name}');\n`;
@@ -218,7 +238,7 @@ Object.assign (py, objects);
 Object.assign (py, utils);
 py.builtins = {};
 Object.assign (py.builtins, builtins);
-console.log (py);
+
 export {
 	py,
 	run

@@ -1,5 +1,7 @@
 import { PyNotImplemented } from "../objects/PyNotImplemented.decl.js";
 import { PyStr } from "../objects/PyStr.decl.js";
+import { $CallWithArgs, $CallWithVariadicArgs } from "./PyCall.js";
+import { PyFalse, PyTrue } from "../objects/exit.js";
 
 function $operator_bin_add (u, v) {
 	return u.__add__ (u, v);
@@ -64,11 +66,55 @@ function $bin_add (left, right) {
 	// Ideally throw the error and stop execution unless caught.
 	console.pylog (`PyTypeError: Unsupported operands for '+': '${left.type.name}' and '${right.type.name}'`);
 }
+function bin_op1 (slot, u, v) {
+	if (slot in u.type) {
+		let res = u.type[slot] (u, v);
+		if (res != PyNotImplemented) {
+			return res;
+		}
+	}
+	if (slot in v.type) {
+		let res = v.type[slot] (v, u);
+		if (res != PyNotImplemented) {
+			return  res;
+		}
+	}
+	return undefined;
+}
+
+function $bin_eq (u, v) {
+	return u.type.__eq__ (u, v); // __eq__ guaranteed to exist in the hierarchy
+}
 
 function $bin_op (op, left, right) {
 	if (op == "+") {
 		return $bin_add (left, right);
+	} else if (op == '==') {
+		return  $bin_eq (left, right);
+	} else if (op == '-') {
+		return bin_op1 ('__sub__', left, right); // TODO: check for undefined
 	}
+	console.pylog (`operator ${op} currently unsupported`);
 }
 
-export { $operator_bin_add, $repr, $GetAttrString, $bin_op, $SetAttrString };
+function $truth_value (u) {
+	if ('__bool__' in u.type) { // TODO: Throw exception when __bool__ doesn't return bool
+		return  $CallWithVariadicArgs (u.type.__bool__, u);
+	} else if ('__len__' in u.type) {
+		let len = $CallWithVariadicArgs (u.type.__len__, u);
+		if (len.val == 0) {
+			return  PyFalse;
+		}
+		return PyTrue;
+	}
+	return PyTrue;
+}
+
+function JS_truth_value (u) {
+	if ($truth_value (u) === PyTrue) {
+		return true;
+	}
+	return false;
+}
+
+export { $operator_bin_add, $repr, $GetAttrString, $bin_op, $SetAttrString, JS_truth_value, $bin_eq, $truth_value };

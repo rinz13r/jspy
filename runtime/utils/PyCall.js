@@ -12,7 +12,7 @@ function $CallWithNoArgs (callable) {
 }
 
 function $CallWithVariadicArgs (callable, ...args) {
-	return $CallWithArgs (callable, new PyTuple (args));
+	return $CallWithArgs (callable, new PyTuple (...args));
 }
 
 export { $CallWithArgs, $CallWithNoArgs, $CallWithVariadicArgs };

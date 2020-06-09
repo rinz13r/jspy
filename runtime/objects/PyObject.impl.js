@@ -1,6 +1,7 @@
 import { PyNotImplemented } from "./PyNotImplemented.decl.js";
 import { PyObject, PyObject_Type } from "./PyObject.decl.js";
 import { PyStr } from "./PyStr.decl.js";
+import { PyTrue, PyFalse } from "./PyBool.decl.js";
 
 function PyObject_Check (o) {
 	return o.type == PyObject_Type;
