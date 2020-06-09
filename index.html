@@ -25,11 +25,22 @@
 		font-family: 'Courier New', Courier, monospace;
 	}
 	</style>
-	<div id="editor">def fib (n):
-	if (n == 1) : return 1
-	return n + fib (n-1)
+	<div id="editor"># Descriptor example
+class Desc:
+	def __get__ (self, ins, cls):
+		return ins.side*ins.side
+	def __set__ (self, ins, val):
+		ins.side = sqrt (val)
 
-print (fib (12))</div>
+class Square:
+	area = Desc ()
+	def __init__ (self, side):
+		self.side = side
+
+s = Square (4)
+print (s.area)
+s.area = 25
+print (s.side)</div>
 	<div id="console"></div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.js" type="text/javascript" charset="utf-8"></script>
 	<script>
@@ -45,6 +56,7 @@ print (fib (12))</div>
 				lib.run (editor.getValue () + '\n');
 			}
 		});
+		alert ('Use Ctrl+Enter to run your code')
 	</script>
 
 	</body>
