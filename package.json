@@ -12,6 +12,7 @@
   "type": "module",
   "scripts": {
     "build": "webpack --config webpack.config.babel.cjs runtime/transpiler/transpiler.js",
+    "prod-build": "webpack --config webpack.config.babel.cjs runtime/transpiler/transpiler.js --mode production",
     "test": "node --experimental-modules runtime/test.js"
   }
 }
