@@ -1,4 +1,4 @@
-import { PyFunction_From } from "./objects/exit.js";
+import { PyFunction_From, PyInt_Type, PyNone, PyInt } from "./objects/exit.js";
 import { $repr } from "./utils/abstract.js"
 import { PyStr_Type } from "./objects/PyStr.decl.js";
 
@@ -14,4 +14,12 @@ let pyprint = PyFunction_From ('print', function (u) {
 	console.pylog (str.val);
 });
 
-export { print, pyprint };
+let sqrt = PyFunction_From ('sqrt', function (u) {
+	if (u.type != PyInt_Type) {
+		console.pylog ('sqrt: Expect int as argument');
+		return PyNone;
+	}
+	return new PyInt (Math.sqrt (u.val));
+});
+
+export { print, pyprint, sqrt };

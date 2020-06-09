@@ -39,7 +39,7 @@ function f (type_obj) {
 	}
 }
 
-let types = [PyInt_Type, PyStr_Type, PyType_Type, PyTuple_Type, PyFunction_Type, PyBool_Type, PyMethod_Type];
+let types = [PyInt_Type, PyStr_Type, PyType_Type, PyTuple_Type, PyFunction_Type, PyBool_Type, PyMethod_Type, PyObject_Type];
 
 for (let type of types) f (type);
 

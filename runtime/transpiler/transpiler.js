@@ -8,15 +8,15 @@ class Visitor {
 		this.program = `let scope = {};\n`;
 		this.namespace = "lib.py";
 		this.currentScope = "scope";
-		this.defintionScope = "scope";
-		this.executionScope = "scope";
-		this.parentScope = "scope";
+		this.nestedScope = "scope";
+		this.nestingLevel = 0;
 	}
 	reset () {
 		this.program = `let scope = {
 			print : lib.py.builtins.pyprint,
 			int : lib.py.PyInt_Type,
 			str : lib.py.PyStr_Type,
+			sqrt : lib.py.builtins.sqrt
 		};\n`;
 	}
 	visitBinop (node) {
@@ -89,35 +89,22 @@ class Visitor {
 			this.program += param.name;
 			this.program += ', ';
 		}
-		let scope = this.currentScope;
-		this.currentScope = `${this.parentScope}_`;
-		this.program += `) {let ${this.currentScope} = Object.create (${this.parentScope});`;
+		let prev_nestedScope = this.nestedScope;
+		this.nestingLevel++;
+		this.nestedScope = this.getScopeName ();
+		this.program += `) {var ${this.nestedScope} = Object.create (${prev_nestedScope});`;
+		let prev_currentScope = this.currentScope;
+		this.currentScope = this.nestedScope;
 		for (let param of node.params) {
 			this.program += `${this.currentScope}.${param.name} = ${param.name};`;
 		}
-		let prev = this.parentScope;
-		this.parentScope = this.currentScope;
 		for (let stmt of node.code) {
 			this.visit (stmt);
 		}
-		this.parentScope = prev;
 		this.program += '});'
-		this.currentScope = scope;
-		// this.program += `${this.currentScope}.${node.name} = new ${this.namespace}.PyFunction ("${node.name}", ${node.name});`;
-	}
-	visitDefToNativeLambda (node) {
-		this.program += `function (`
-		for (let param of node.params) {
-			this.program += param.name;
-			this.program += ', ';
-		}
-		this.program += ') {';
-		for (stmt in node.code) {
-			this.visit (stmt);
-			this.program += ';\n';
-		}
-		// TODO: Add PyNone
-		this.program += '}';
+		this.nestingLevel--;
+		this.nestedScope = prev_nestedScope;
+		this.currentScope = prev_currentScope;
 	}
 	visitReturn (node) {
 		if (node.values.length == 1) {
@@ -195,19 +182,27 @@ class Visitor {
 		this.listOfItems (ast.items);
 		this.program += ')\n';
 	}
+	getScopeName () {
+		let ret = 'scope';
+		for (let i = 0; i < this.nestingLevel; i++) ret += '_';
+		return ret;
+	}
+	visitPass () {}
 	visitClass (node) {
 		// TODO: Consider Base Class
 		this.program += `${this.currentScope}.${node.name} = Object.create (${this.namespace}.PyObject_Type);\n`;
 		this.program += `${this.namespace}.PyType.call (${this.currentScope}.${node.name}, '${node.name}');\n`;
-		let scope = this.currentScope;
-		this.currentScope = `${this.currentScope}.${node.name}`;
+		this.nestingLevel++;
+		this.program += `var ${this.getScopeName()} = ${this.namespace}.getClassScope (${this.currentScope}.${node.name}, ${this.nestedScope});\n`;
+		let prevScope = this.currentScope;
+		this.currentScope = this.getScopeName ();
 		// Define all functions in the type object scope.
 		// TODO: Consider Type properties and put them in __dict__
 		for (let code of node.code) {
-			// if (code.type == "def") this.visitDefToNativeLambda (code);
 			this.visit (code);
 		}
-		this.currentScope = scope;
+		this.nestingLevel--;
+		this.currentScope = prevScope;
 		this.program += `${this.namespace}.$initialize_type (${this.currentScope}.${node.name});\n`
 	}
 }
@@ -233,11 +228,29 @@ function run (program) {
 	return visitor.program;
 }
 
+
+function getClassScope (type, parscope) {
+	return new Proxy ({type: type, parscope : parscope}, {
+		get (target, key, recv) {
+			if (target.type.hasOwnProperty (key)) {
+				return target.type[key];
+			}
+			return target.parscope[key];
+		},
+		set (target, key, value, recv) {
+			// console.log (`proxy set key: ${key}, val: ${value}`);
+			target.type[key] = value;
+			return true;
+		}
+	});
+}
+
 let py = {}
 Object.assign (py, objects);
 Object.assign (py, utils);
 py.builtins = {};
 Object.assign (py.builtins, builtins);
+py.getClassScope = getClassScope;
 
 export {
 	py,

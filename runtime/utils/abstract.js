@@ -21,12 +21,12 @@ function $GetAttrString (o, selector) {
 			res = typ.dict[selector];
 			if ('__get__' in res.type && '__set__' in res.type) {
 				console.log ('here1');
-				return res.__get__ (res, o, typ);
+				return res.type.__get__ (res, o, typ);
 			}
 		}
 		if (o.hasOwnProperty ('dict') && selector in o.dict) {
 			// console.log (o, o.dict);
-			console.log ('here2', o.dict[selector]);
+			console.log ('here2');
 			return o.dict[selector];
 		}
 		if (res) {
@@ -47,6 +47,13 @@ function $GetAttrString (o, selector) {
 
 function $SetAttrString (o, selector, val) {
 	// TODO: Update algorithm to handle edge cases
+	if (selector in o.type.dict) {
+		let res = o.type.dict[selector];
+		if ('__set__' in res.type) {
+			res.type.__set__ (res, o, val);
+			return;
+		}
+	}
 	o.dict[selector] = val;
 }
 
@@ -93,6 +100,8 @@ function $bin_op (op, left, right) {
 		return  $bin_eq (left, right);
 	} else if (op == '-') {
 		return bin_op1 ('__sub__', left, right); // TODO: check for undefined
+	} else if (op == '*') {
+		return bin_op1 ('__mul__', left, right); // TODO: check for undefined
 	}
 	console.pylog (`operator ${op} currently unsupported`);
 }

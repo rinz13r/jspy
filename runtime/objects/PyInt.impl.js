@@ -44,3 +44,9 @@ PyInt_Type.__sub__ = function (u, v) {
 	}
 	return new PyInt (u.val-v.val);
 }
+PyInt_Type.__mul__ = function (u, v) {
+	if (!PyInt_Check (u) || !PyInt_Check (v)) {
+		return PyNotImplemented;
+	}
+	return new PyInt (u.val*v.val);
+}
