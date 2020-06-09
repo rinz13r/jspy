@@ -31,10 +31,11 @@ PyObject_Type.__getattribute__ = function (self, selector) {
 	let res;
 	// TODO: Assert selector is PyStr
 	selector = selector.val;
-	if (self.type.dict.hasOwnProperty (selector)) { // TODO: Guarantee all types have dict
+	let typ = self.type;
+	if (typ.dict.hasOwnProperty (selector)) { // TODO: Guarantee all types have dict
 		res = self.type.dict[selector];
 		if ('__get__' in res.type && '__set__' in res.type) { // Data Descriptor
-			return res.type.__get__ (res, self, self.type); // TODO: Maybe passing wrong args
+			return res.type.__get__ (res, self, typ); // TODO: Maybe passing wrong args
 		}
 	}
 	if (self.dict && selector in self.dict) {
@@ -42,7 +43,7 @@ PyObject_Type.__getattribute__ = function (self, selector) {
 	}
 	if (res) {
 		if ('__get__' in res.type) {
-			return res.type.__get__ (res, self, self.type); // TODO
+			return res.type.__get__ (res, self, typ); // TODO
 		}
 		return res;
 	}

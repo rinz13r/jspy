@@ -15,6 +15,4 @@ function PyInt_From (val) {
 let PyInt_Type = Object.create (PyObject_Type);
 PyType.call (PyInt_Type, 'int');
 
-PyInt.prototype = PyInt_Type;
-
 export {PyInt, PyInt_Type};
