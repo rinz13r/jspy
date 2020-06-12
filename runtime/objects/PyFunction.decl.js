@@ -1,14 +1,14 @@
 import { PyType, PyObject_Type } from "./PyObject.decl.js";
 import { PyStr } from "./PyStr.decl.js";
 
-function PyFunction (name, jsfunc) {
-	this.type = PyFunction_Type;
-	this.jsfunc = jsfunc;
-	this.dict = {
-		'__name__' : new PyStr (name)
-	}
-	this.name = name;
-}
+// function PyFunction (name, jsfunc) {
+// 	this.type = PyFunction_Type;
+// 	this.jsfunc = jsfunc;
+// 	this.dict = {
+// 		'__name__' : new PyStr (name)
+// 	}
+// 	this.name = name;
+// }
 
 let PyFunction_Type = Object.create (PyObject_Type);
 PyType.call (PyFunction_Type, 'function');
@@ -22,4 +22,4 @@ function PyFunction_From (name, jsfunc) {
 	return jsfunc;
 }
 
-export { PyFunction, PyFunction_Type, PyFunction_From };
+export { PyFunction_Type, PyFunction_From };

@@ -51,11 +51,16 @@ class Visitor {
 		this.program += ';\n';
 	}
 	visitLiteral (node) {
-		if (typeof (node.value) == "number")
-			this.program += `(new ${this.namespace}.PyInt (${node.value}))`;
-		else if (typeof (node.value) == "string") {
+		if (typeof (node.value) == "number") {
+			if (Number.isInteger (node.value)) {
+				this.program += `(${this.namespace}.$PyInt_From (${node.value}))`;
+			} else {
+				this.program += `(${this.namespace}.$PyFloat_From (${node.value}))`;
+			}
+			console.log (node);
+		} else if (typeof (node.value) == "string") {
 			if (node.value[0] == "\\" || node.value[0] == '\'') {
-				this.program += `(new ${this.namespace}.PyStr (${node.value}))`;
+				this.program += `(${this.namespace}.$PyStr_From (${node.value}))`;
 			} else if (node.value == "None") {
 				this.program += `(${this.namespace}.PyNone)`;
 			} else if (node.value == "True") {
@@ -101,7 +106,7 @@ class Visitor {
 		for (let stmt of node.code) {
 			this.visit (stmt);
 		}
-		this.program += '});'
+		this.program += `\n return ${this.namespace}.PyNone});\n`;
 		this.nestingLevel--;
 		this.nestedScope = prev_nestedScope;
 		this.currentScope = prev_currentScope;

@@ -1,10 +1,10 @@
 import { PyNone_Type } from "./PyNone.decl.js";
-import { PyStr } from "./PyStr.decl.js";
+import { $PyStr_From } from "./PyStr.decl.js";
 
 PyNone_Type.__repr__ = function (self) {
 	return `None`;
 }
 
 PyNone_Type.__str__ = function (self) {
-	return new PyStr ('None');
+	return $PyStr_From ('None');
 }

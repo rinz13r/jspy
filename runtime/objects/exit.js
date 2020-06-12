@@ -1,14 +1,15 @@
 // Expose slots (dunders) to the user via PyFunctions.
 
 import { PyType, PyType_Type, PyObject_Type } from "./PyObject.decl.js";
-import { PyInt, PyInt_Type } from "./PyInt.decl.js";
+import { $PyInt_From, PyInt_Type } from "./PyInt.decl.js";
 import { PyStr, PyStr_Type } from "./PyStr.decl.js";
-import { PyFunction_From, PyFunction, PyFunction_Type } from "./PyFunction.decl.js";
+import { PyFunction_From, PyFunction_Type } from "./PyFunction.decl.js";
 import { PyMethod_From, PyMethod_Type } from "./PyMethod.decl.js";
 import { PyTuple, PyTuple_Type } from "./PyTuple.decl.js";
 import { PyTrue, PyFalse, PyBool_Type } from "./PyBool.decl.js";
 import { PyList_From, PyList_Type } from "./PyList.decl.js"
 import { PyNone, PyNone_Type } from "./PyNone.decl.js"
+import { $PyFloat_From, PyFloat_Type } from "./PyFloat.decl.js";
 
 import {  } from "./PyObject.impl.js";
 import {  } from "./PyInt.impl.js";
@@ -20,6 +21,7 @@ import {  } from "./PyType.impl.js";
 import {  } from "./PyMethod.impl.js";
 import {  } from "./PyList.impl.js";
 import {  } from "./PyNone.impl.js";
+import {  } from "./PyFloat.impl.js"
 
 const dunders = new Set ([
 	'__repr__',
@@ -39,12 +41,13 @@ function f (type_obj) {
 	}
 }
 
-let types = [PyInt_Type, PyStr_Type, PyType_Type, PyTuple_Type, PyFunction_Type, PyBool_Type, PyMethod_Type, PyObject_Type];
+let types = [PyFloat_Type, PyInt_Type, PyStr_Type, PyType_Type, PyTuple_Type, PyFunction_Type, PyBool_Type, PyMethod_Type, PyObject_Type];
 
 for (let type of types) f (type);
 
 export {
-	PyInt, PyStr, PyTuple, PyFunction, PyType,
+	$PyInt_From, $PyFloat_From,
+	PyTuple, PyType,
 	PyFunction_From, PyFunction_Type,
 	PyBool_Type, PyTrue, PyFalse,
 	PyObject_Type, f,

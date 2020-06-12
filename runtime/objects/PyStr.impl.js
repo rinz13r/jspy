@@ -1,9 +1,8 @@
-import { PyStr_Type, PyStr } from "./PyStr.decl.js";
+import { PyStr_Type, $PyStr_From } from "./PyStr.decl.js";
 import { PyNotImplemented } from "./PyNotImplemented.decl.js";
 
 function PyStr_Check (u) {
-	if (u.type == PyStr_Type) return true;
-	return false;
+	return o.type === PyStr_Type || PyStr_Type.isPrototypeOf (o.type);
 }
 
 function __repr__ (self) {return self.val;}
@@ -18,7 +17,7 @@ function __add__ (u, v) {
 	if (!PyStr_Check (v)) {
 		return PyNotImplemented;
 	}
-	return new PyStr (u.val + v.val);
+	return $PyStr_From (u+v);
 }
 
 PyStr_Type.__repr__ = __repr__;

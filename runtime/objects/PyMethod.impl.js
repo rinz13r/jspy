@@ -1,5 +1,5 @@
 import { PyMethod_Type } from "./PyMethod.decl.js";
-import { PyStr } from "./PyStr.decl.js";
+import { $PyStr_From } from "./PyStr.decl.js";
 
 function __call__ (self, args, kwargs) {
 	// console.log (self.length, args.len);
@@ -11,7 +11,7 @@ function __call__ (self, args, kwargs) {
 }
 
 function __str__ (self) {
-	return new PyStr (`<bound-method '${self.__name__}'>`);
+	return $PyStr_From (`<bound-method '${self.__name__}'>`);
 }
 
 PyMethod_Type.__call__ = __call__;

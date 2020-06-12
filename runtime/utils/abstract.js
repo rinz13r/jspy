@@ -1,5 +1,5 @@
 import { PyNotImplemented } from "../objects/PyNotImplemented.decl.js";
-import { PyStr } from "../objects/PyStr.decl.js";
+import { $PyStr_From } from "../objects/PyStr.decl.js";
 import { $CallWithArgs, $CallWithVariadicArgs } from "./PyCall.js";
 import { PyFalse, PyTrue } from "../objects/exit.js";
 
@@ -13,8 +13,8 @@ function $repr (u) {
 
 function $GetAttrString (o, selector) {
 	let typ = o.type;
-	if (typ.__getattribute__) {
-		return typ.__getattribute__ (o, new PyStr (selector));
+	if (typ.__getattribute__ == 0) {
+		return typ.__getattribute__ (o, $PyStr_From (selector));
 	} else {
 		let res;
 		if (selector in typ.dict) {
@@ -111,7 +111,7 @@ function $truth_value (u) {
 		return  $CallWithVariadicArgs (u.type.__bool__, u);
 	} else if ('__len__' in u.type) {
 		let len = $CallWithVariadicArgs (u.type.__len__, u);
-		if (len.val == 0) {
+		if (len == 0) {
 			return  PyFalse;
 		}
 		return PyTrue;

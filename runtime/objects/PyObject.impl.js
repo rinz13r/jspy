@@ -1,6 +1,6 @@
 import { PyNotImplemented } from "./PyNotImplemented.decl.js";
 import { PyObject, PyObject_Type } from "./PyObject.decl.js";
-import { PyStr } from "./PyStr.decl.js";
+import { $PyStr_From } from "./PyStr.decl.js";
 import { PyTrue, PyFalse } from "./PyBool.decl.js";
 import { PyNone } from "./PyNone.decl.js";
 
@@ -11,7 +11,7 @@ function TYPE (o) {return o.type;}
 
 PyObject_Type. __repr__ = function (self) {return `<object at ?mem>`;}
 PyObject_Type.__str__ = function (self) {
-	return new PyStr (`<object '${self.type.name}' at ?mem>`);
+	return $PyStr_From (`<object '${self.type.name}' at ?mem>`);
 }
 
 PyObject_Type.__eq__ = function (u, v) {
@@ -32,7 +32,7 @@ PyObject_Type.__getattribute__ = function (self, selector) {
 	// TODO : conditionally throw a type error
 	let res;
 	// TODO: Assert selector is PyStr
-	selector = selector.val;
+	selector = selector;
 	let typ = self.type;
 	if (typ.dict.hasOwnProperty (selector)) { // TODO: Guarantee all types have dict
 		res = self.type.dict[selector];

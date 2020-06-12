@@ -1,5 +1,5 @@
-import { PyFunction_Type, PyFunction, PyFunction_From } from "./PyFunction.decl.js";
-import { PyStr } from "./PyStr.decl.js";
+import { PyFunction_Type, PyFunction_From } from "./PyFunction.decl.js";
+import { $PyStr_From } from "./PyStr.decl.js";
 import { PyMethod_From } from "./PyMethod.decl.js";
 
 function __call__ (self, args, kwargs) {
@@ -12,7 +12,7 @@ function __call__ (self, args, kwargs) {
 }
 
 function __str__ (self) {
-	return new PyStr (`<function '${self.__name__}'>`);
+	return $PyStr_From (`<function '${self.__name__}'>`);
 }
 
 PyFunction_Type.__call__ = __call__;
