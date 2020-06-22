@@ -20,10 +20,6 @@ PyObject_Type.__eq__ = function (u, v) {
 	return PyFalse;
 }
 
-PyObject_Type.__call__ = function () {
-	return new PyObject ();
-}
-
 PyObject_Type.__init__ = function (self) {
 	return PyNone;
 }

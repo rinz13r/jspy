@@ -1,6 +1,6 @@
 import { parse } from "./Python.js"
-import * as objects from "../objects/exit.js"
-import * as utils from "../utils/all.js"
+import * as objects from "../objects/include.js"
+import * as utils from "../utils/include.js"
 import * as builtins from "../builtins.js"
 
 class Visitor {
@@ -79,7 +79,7 @@ class Visitor {
 		this.program += `${this.namespace}.$CallWithArgs (`;
 		this.visit (node.func); // callable
 		this.program += ', ';
-		this.program += `new ${this.namespace}.PyTuple (`
+		this.program += `${this.namespace}.$PyTuple_From (`
 		for (let arg of node.args) {
 			this.visit (arg);
 			this.program += ',';
@@ -178,12 +178,12 @@ class Visitor {
 		this.program += ']';
 	}
 	visitTuple (ast) {
-		this.program += `new ${this.namespace}.PyTuple (...`;
+		this.program += `${this.namespace}.$PyTuple_From (...`;
 		this.listOfItems (ast.items);
 		this.program += ')\n';
 	}
 	visitList (ast) {
-		this.program += `${this.namespace}.PyList_From (`
+		this.program += `${this.namespace}.$PyList_From (`
 		this.listOfItems (ast.items);
 		this.program += ')\n';
 	}

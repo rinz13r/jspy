@@ -1,5 +1,4 @@
 import { PyType, PyObject_Type } from "./PyObject.decl.js";
-import { PyStr } from "./PyStr.decl.js";
 
 // function PyFunction (name, jsfunc) {
 // 	this.type = PyFunction_Type;

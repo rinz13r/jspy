@@ -4,11 +4,12 @@ import { PyMethod_From } from "./PyMethod.decl.js";
 
 function __call__ (self, args, kwargs) {
 	// console.log (self.length, args.len);
-	if (self.length != args.len) {
-		// throw error
-		console.error ('PyTypeError : arity mismatch')
+	if (self.length != args.length) {
+		// TODO: Throw
+		console.pylog ('PyTypeError : arity mismatch')
+		throw Error ('Arity mismatch');
 	}
-	return self.apply (null, args.arr);
+	return self.apply (null, args);
 }
 
 function __str__ (self) {

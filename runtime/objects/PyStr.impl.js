@@ -1,7 +1,7 @@
 import { PyStr_Type, $PyStr_From } from "./PyStr.decl.js";
 import { PyNotImplemented } from "./PyNotImplemented.decl.js";
 
-function PyStr_Check (u) {
+function PyStr_Check (o) {
 	return o.type === PyStr_Type || PyStr_Type.isPrototypeOf (o.type);
 }
 

@@ -1,5 +1,5 @@
 import { PyType_Type, PyType } from "./PyObject.decl.js";
-import { PyTuple } from "./PyTuple.decl.js"
+import { $PyTuple_From } from "./PyTuple.decl.js"
 import { $PyStr_From } from "./PyStr.decl.js";
 
 PyType_Type.__call__ = function (cls, args, kwargs) {
@@ -9,7 +9,7 @@ PyType_Type.__call__ = function (cls, args, kwargs) {
 		type : cls,
 		dict : {},
 	};
-	let nargs = new PyTuple (ret, ...args.arr);
+	let nargs = $PyTuple_From (ret, ...args);
 	let tp_init = cls.__init__;
 	tp_init.type.__call__ (tp_init, nargs, kwargs);
 	// cls.__init__.__call__ (ret, args, kwargs);

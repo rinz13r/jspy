@@ -1,7 +1,7 @@
 import { PyNotImplemented } from "../objects/PyNotImplemented.decl.js";
 import { $PyStr_From } from "../objects/PyStr.decl.js";
 import { $CallWithArgs, $CallWithVariadicArgs } from "./PyCall.js";
-import { PyFalse, PyTrue } from "../objects/exit.js";
+import { PyFalse, PyTrue } from "../objects/include.js";
 
 function $operator_bin_add (u, v) {
 	return u.__add__ (u, v);

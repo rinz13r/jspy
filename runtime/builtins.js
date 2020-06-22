@@ -1,4 +1,4 @@
-import { PyFunction_From, PyInt_Type, $PyInt_From, PyNone, $PyFloat_From } from "./objects/exit.js";
+import { PyFunction_From, PyInt_Type, $PyInt_From, PyNone, $PyFloat_From } from "./objects/include.js";
 import { $repr } from "./utils/abstract.js"
 import { PyStr_Type } from "./objects/PyStr.decl.js";
 
@@ -11,7 +11,7 @@ let pyprint = PyFunction_From ('print', function (u) {
 	while (str.type != PyStr_Type) {
 		str = str.type.__str__ (str);
 	}
-	console.pylog (str);
+	console.pylog (str.valueOf ());
 });
 
 let sqrt = PyFunction_From ('sqrt', function (u) {
