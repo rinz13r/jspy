@@ -30,11 +30,11 @@ PyInt_Type.__eq__ = function (u, v) {
 	if (!PyInt_Check (u) || !PyInt_Check (v)) {
 		return PyNotImplemented;
 	}
-	return $PyBool_From (u == v);
+	return $PyBool_From (Number (u) == Number (v));
 }
 
 PyInt_Type.__bool__ = function (self) {
-	return $PyBool_From (self == 0);
+	return $PyBool_From ((self != 0));
 }
 PyInt_Type.__sub__ = function (u, v) {
 	if (!PyInt_Check (u) || !PyInt_Check (v)) {

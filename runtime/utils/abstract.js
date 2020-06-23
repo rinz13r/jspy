@@ -98,6 +98,8 @@ function $bin_op (op, left, right) {
 		return $bin_add (left, right);
 	} else if (op == '==') {
 		return  $bin_eq (left, right);
+	} else if (op == '!=') {
+		return JS_truth_value ($bin_eq (left, right)) ? PyFalse : PyTrue;
 	} else if (op == '-') {
 		return bin_op1 ('__sub__', left, right); // TODO: check for undefined
 	} else if (op == '*') {
@@ -120,10 +122,7 @@ function $truth_value (u) {
 }
 
 function JS_truth_value (u) {
-	if ($truth_value (u) === PyTrue) {
-		return true;
-	}
-	return false;
+	return $truth_value (u) === PyTrue;
 }
 
 export { $operator_bin_add, $repr, $GetAttrString, $bin_op, $SetAttrString, JS_truth_value, $bin_eq, $truth_value };

@@ -147,6 +147,15 @@ class Visitor {
 			console.error (ast);
 		}
 	}
+	visitWhile (node) {
+		this.program += `while (${this.namespace}.JS_truth_value (`;
+		this.visit (node.cond.items[0]);
+		this.program += `)) {\n`;
+		for (let stmt of node.code) {
+			this.visit (stmt);
+		}
+		this.program += `}\n`;
+	}
 	visitIf (node) {
 		this.program += `if (${this.namespace}.JS_truth_value (`
 		this.visit (node.cond.items[0]);

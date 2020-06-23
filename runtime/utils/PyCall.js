@@ -13,7 +13,7 @@ function $CallWithNoArgs (callable) {
 }
 
 function $CallWithVariadicArgs (callable, ...args) {
-	return $CallWithArgs (callable, $PyTuple_From (args)); // TODO: check
+	return $CallWithArgs (callable, $PyTuple_From (...args)); // TODO: check
 }
 
 export { $CallWithArgs, $CallWithNoArgs, $CallWithVariadicArgs };
